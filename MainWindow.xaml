@@ -5,8 +5,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:multimedia_player"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Multimedia Player" Height="450" Width="800">
+    <Canvas>
+        <Label Canvas.Left="10" Canvas.Top="15">Playlist</Label>
+        <ListBox Width="200" Height="200" Canvas.Left="10" Canvas.Top="46"></ListBox>
+        <Button Width="80" Height="25" Canvas.Left="215" Canvas.Top="47">Add file</Button>
+        <Button Width="100" Height="25" Canvas.Left="215" Canvas.Top="77">Save Playlist</Button>
+        <Button Width="100" Height="25" Canvas.Left="215" Canvas.Top="107">Load Playlist</Button>
+        <Button Width="100" Height="25" Canvas.Left="215" Canvas.Top="137">Remove from list</Button>
         
-    </Grid>
+        <Label Canvas.Left="353" Canvas.Top="46">Playing:</Label>
+        <Label Canvas.Left="353" Canvas.Top="78">(file name and video screen)</Label>
+        
+        <Slider Width="600" Canvas.Left="100" Canvas.Top="300"></Slider>
+        <Label Canvas.Left="712" Canvas.Top="297">00:00/00:00</Label>
+        
+        <Button Canvas.Left="10" Canvas.Top="300">Play</Button>
+        <Button Canvas.Left="40" Canvas.Top="300">Pause</Button>
+        <Button Canvas.Left="40" Canvas.Top="324">Stop</Button>
+        <Button Canvas.Left="10" Canvas.Top="348">Next</Button>
+        <Button Canvas.Left="43" Canvas.Top="348">Previous</Button>
+        
+        <Label Canvas.Left="147" Canvas.Top="338">Play Style:</Label>
+        <Button Canvas.Left="210" Canvas.Top="341">Sequently</Button>
+        <Button Canvas.Left="271" Canvas.Top="341">Randomly</Button>
+        
+        <Label Canvas.Left="374" Canvas.Top="338">Repeat:</Label>
+        <Button Canvas.Left="423" Canvas.Top="341">None</Button>
+        <Button Canvas.Left="460" Canvas.Top="341">Endlessly</Button>
+    </Canvas>
 </Window>
