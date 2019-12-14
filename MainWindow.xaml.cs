@@ -147,6 +147,8 @@ namespace multimedia_player
 
         BindingList<FileInfo> FullPaths = new BindingList<FileInfo>();
 
+        //int countCheckBox=0;
+        //BindingList<int> tagListBox=new BindingList<int>();
         private void addFile_Click(object sender, RoutedEventArgs e)
         {
             var screen = new OpenFileDialog();
@@ -154,6 +156,9 @@ namespace multimedia_player
             {
                 var info = new FileInfo(screen.FileName);
                 FullPaths.Add(info);
+                //CheckBox ch = new CheckBox();
+                //countCheckBox++;
+                //tagListBox.Add(countCheckBox);
             }
         }
 
@@ -334,8 +339,34 @@ namespace multimedia_player
 
         private void Slider_Click(object sender, MouseButtonEventArgs e)
         {
-            var testDuration = new TimeSpan(duration.Hours, duration.Minutes,(int)Slider.Value);
+            
+            var slider = sender as Slider;
+            var testDuration = new TimeSpan(duration.Hours, duration.Minutes,(int)slider.Value);
             Player.Position = testDuration;
+        }
+
+        List<FileInfo> ListRemove = new List<FileInfo>();
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var checkbox = sender as CheckBox;
+
+            ListRemove.Add((FileInfo)checkbox.Tag);
+            //MessageBox.Show(checkbox.Tag.ToString());
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var checkbox = sender as CheckBox;
+            ListRemove.Remove((FileInfo)checkbox.Tag);
+        }
+
+        private void btnRemove_Click(object sender, RoutedEventArgs e)
+        {
+            //int indexRemove = 0;
+            for(int i=0;i<ListRemove.Count;i++)
+            {
+                FullPaths.Remove(ListRemove[i]);
+            }
         }
     }
 }
