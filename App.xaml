@@ -109,6 +109,7 @@
             </Setter>
         </Style>
 
+        
         <Style TargetType="{x:Type Button}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -130,9 +131,10 @@
             </Setter>
         </Style>
 
-        <Storyboard x:Key="startSpin">
-            <DoubleAnimation Storyboard.TargetName="disk" Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
-                             From="0" To="360" Duration="0:0:30" RepeatBehavior="Forever"/>
+        <!--spin the disk-->
+        <Storyboard x:Key="startSpin" Storyboard.TargetName="disk" Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)">
+            <DoubleAnimation RepeatBehavior="Forever" From="0" To="360" BeginTime="0:0:0" Duration="0:0:30"/>
         </Storyboard>
+
     </Application.Resources>
 </Application>

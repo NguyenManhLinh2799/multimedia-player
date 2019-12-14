@@ -29,7 +29,7 @@ namespace multimedia_player
         MediaPlayer Player = new MediaPlayer();
         DispatcherTimer timer;
         int currentIndex = -1;
-        TimeSpan duration;
+
 
         public MainWindow()
         {
@@ -42,29 +42,22 @@ namespace multimedia_player
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            if (Player.Source != null)
+            if (Player.Source != null && Player.NaturalDuration.HasTimeSpan)
             {
+             
                 //var filename = FullPaths[currentIndex].Name;
                 //var converter = new NameConverter();
                 //var shortname = converter.Convert(filename, null, null, null);
                 var converter = new NameConverter();
                 var currentPos = Player.Position.ToString(@"mm\:ss");
-                
 
-                //currenttime.Content = $"{currentPos}/{duration.Minutes}:{duration.Seconds}-{currentIndex}";
+                var duration = Player.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
+
+                currenttime.Content = $"{currentPos}/{duration}-{currentIndex}";
                 
-               // int timeOfPlayer = Player.NaturalDuration.TimeSpan.Minutes * 60 + Player.NaturalDuration.TimeSpan.Seconds;
-                Slider.Maximum = 400;
+                int timeOfPlayer = Player.NaturalDuration.TimeSpan.Minutes * 60 + Player.NaturalDuration.TimeSpan.Seconds;
+                Slider.Maximum = timeOfPlayer;
                 Slider.Value += 1;
-
-                currenttime.Content = $"{currentPos}-{currentIndex}";
-                
-                int a = (Player.Position.Minutes * 60 + Player.Position.Seconds);
-
-             
-                //Slider.Maximum = a;
-                Slider.Value += 1;
-                //Slider.
             }
             else
                 Title = "No file selected...";
@@ -74,6 +67,9 @@ namespace multimedia_player
 
         private void Player_MediaEnded(object sender, EventArgs e)
         {
+            Storyboard spin = (Storyboard)FindResource("startSpin");
+
+            spin.Stop(disk);
 
             if (currentIndex < FullPaths.Count - 1)
             {
@@ -88,6 +84,7 @@ namespace multimedia_player
                     currentIndex = RandomPlay[currentRandomPlay];
                 }
             }
+
             PlaySelectedIndex(currentIndex);
             Slider.Value = 0;
         }
@@ -97,6 +94,7 @@ namespace multimedia_player
         private void addFile_Click(object sender, RoutedEventArgs e)
         {
             var screen = new OpenFileDialog();
+
             if(screen.ShowDialog() == true)
             {
                 var info = new FileInfo(screen.FileName);
@@ -113,11 +111,13 @@ namespace multimedia_player
         {
             Storyboard spin = (Storyboard)FindResource("startSpin");
 
-
             if (isPausing == true)
             {
+
+                timer.Start();
                 Player.Play();
                 isPlaying = true;
+                spin.Resume(disk);
             }
             else
             {
@@ -125,7 +125,6 @@ namespace multimedia_player
                 {
                     currentIndex = RandomPlay[currentRandomPlay];
                     PlaySelectedIndex(currentIndex);
-
                 }
                 else
                 {
@@ -146,49 +145,15 @@ namespace multimedia_player
                 
 
 
-            
-   
-
-            //if (isPausing)
-            //{
-            //    isPlaying = true;
-            //    Player.Play();
-            //}
-            //else
-            //{
-
-
-            //    if (Randomly)
-            //    {
-            //        currentIndex = RandomPlay[currentRandomPlay];
-            //    }
-            //    else
-            //    {
-            //        if (ListBoxFiles.SelectedIndex >= 0)
-            //        {
-            //            currentIndex = ListBoxFiles.SelectedIndex;
-            //        }
-            //        else
-            //        {
-            //            MessageBox.Show("No file selected!");
-            //            playPauseCheckbox.IsChecked = false;
-            //        }
-            //    }
-            //}
-
-        
-
         bool isPlaying=false;
         bool isPausing = false;
 
         private void PlaySelectedIndex(int i)
         {
+            Storyboard spin = (Storyboard)FindResource("startSpin");
+            spin.Begin(disk, true);
             string filename = FullPaths[i].FullName;
-            Debug.WriteLine(FullPaths[i]);
-
             Player.Open(new Uri(filename, UriKind.Absolute));
-
-            //duration = Player.NaturalDuration.TimeSpan;
             Player.Play();
             isPlaying = true;
             timer.Start();
@@ -201,11 +166,11 @@ namespace multimedia_player
             if (isPlaying)
             {
                 Player.Pause();
-                spin.Stop(disk);
+                spin.Pause(disk);
                 isPausing = true;
                 timer.Stop();
+                isPlaying = !isPlaying;
             }
-            isPlaying = !isPlaying;
         }
 
         private void Previous_Click(object sender, RoutedEventArgs e)
@@ -221,6 +186,7 @@ namespace multimedia_player
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
+
             if (currentIndex < ListBoxFiles.Items.Count - 1)
             {
                 Player.Stop();
