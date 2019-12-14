@@ -8,7 +8,43 @@
         Title="Multimedia Player" Height="600" Width="1000" Loaded="Window_Loaded">
     <Window.Resources>
         <local:NameConverter x:Key="converter"/>
+        <Style x:Key="MyCustomStyleForSlider" TargetType="{x:Type Slider}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Slider}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TickBar x:Name="TopTick" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" Placement="Top" Height="4" Grid.Row="0"/>
+                                <TickBar x:Name="BottomTick" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" Placement="Bottom" Height="4" Grid.Row="0"/>
+                                <Border x:Name="TrackBackground"  BorderThickness="1" CornerRadius="1" Margin="5,0" VerticalAlignment="Center" Height="4.0" Grid.Row="1" >
+                                    <Canvas Margin="-6,-1">
+                                        <Rectangle Visibility="Hidden" x:Name="PART_SelectionRange" Height="4.0" Fill="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Stroke="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" StrokeThickness="1.0"/>
+                                    </Canvas>
+                                </Border>
+                                <Track x:Name="PART_Track" Grid.Row="1">
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Command="{x:Static Slider.DecreaseLarge}"/>
+                                    </Track.DecreaseRepeatButton>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Command="{x:Static Slider.IncreaseLarge}"/>
+                                    </Track.IncreaseRepeatButton>
+                                    <Track.Thumb>
+                                        <Thumb x:Name="Thumb" Background="Black"/>
+                                    </Track.Thumb>
+                                </Track>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
@@ -47,16 +83,17 @@
 
             <!--Col-1: spinner-->
             <Grid Grid.Column="1">
-                
-                <Image RenderTransformOrigin="0.5, 0.5" Height="250" Width='250' x:Name="disk" Source="button/disk.png" RenderOptions.BitmapScalingMode="HighQuality">
-                    <Image.Clip>
-                        <EllipseGeometry RadiusX="150" RadiusY="150" Center="100 100" />
-                    </Image.Clip>
-                    <Image.RenderTransform>
-                        <RotateTransform/>
-                    </Image.RenderTransform>
-                </Image>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image RenderTransformOrigin="0.5, 0.5" Height="250" Width='250' x:Name="disk" Source="button/disk.png" RenderOptions.BitmapScalingMode="HighQuality">
+                        <Image.Clip>
+                            <EllipseGeometry RadiusX="150" RadiusY="150" Center="100 100" />
+                        </Image.Clip>
+                        <Image.RenderTransform>
+                            <RotateTransform/>
+                        </Image.RenderTransform>
+                    </Image>
 
+                </StackPanel>
             </Grid>
 
             <!--Col-2: Songs-->
@@ -71,9 +108,13 @@
                     <ListBox Name="ListBoxFiles" Grid.Row="1" Width="Auto" Height="315">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <CheckBox ></CheckBox>
-                                    <Label Content=" "></Label>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Name="SPListBox">
+                                    <CheckBox Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" ForceCursor="True">
+                                        <CheckBox.Tag>
+                                            <Binding></Binding>
+                                        </CheckBox.Tag>
+                                    </CheckBox>
+                                    <Label></Label>
                                     <TextBlock Text="{Binding Name, Converter={StaticResource converter}}"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -86,7 +127,7 @@
                         <Button Click="addFile_Click" FontWeight="Bold" FontSize="11" Width="80" Height="25">Load Song</Button>
 
                         <Button Click="SaveToPlaylist_Click" FontSize="11" FontWeight="Bold" Width="80" Height="25">Save To Playlist</Button>
-                        <Button Click="Remove_Click" FontWeight="Bold" FontSize="11" Width="80" Height="25">Remove</Button>
+                        <Button FontWeight="Bold" FontSize="11" Width="80" Height="25" Click="btnRemove_Click">Remove</Button>
                     </StackPanel>
                 </StackPanel>
             </Grid>
@@ -106,7 +147,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Slider VerticalAlignment="Center" Grid.Column="0" Width="600" Name="Slider" IsMoveToPointEnabled="True"  MouseLeftButtonUp="Slider_Click"/>
+                <Slider VerticalAlignment="Center" Grid.Column="0" Width="Auto" MinWidth="600" Name="Slider"  IsMoveToPointEnabled="True"   MouseUp="Slider_Click"/>
                 <Label  Name="currenttime" VerticalAlignment="Center" Grid.Column="1" Content="00:00/00:00"/>
             </Grid>
 

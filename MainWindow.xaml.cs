@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -144,6 +145,8 @@ namespace multimedia_player
 
         BindingList<FileInfo> FullPaths = new BindingList<FileInfo>();
 
+        //int countCheckBox=0;
+        //BindingList<int> tagListBox=new BindingList<int>();
         private void addFile_Click(object sender, RoutedEventArgs e)
         {
             var screen = new OpenFileDialog();
@@ -152,6 +155,9 @@ namespace multimedia_player
             {
                 var info = new FileInfo(screen.FileName);
                 FullPaths.Add(info);
+                //CheckBox ch = new CheckBox();
+                //countCheckBox++;
+                //tagListBox.Add(countCheckBox);
             }
         }
 
@@ -263,6 +269,8 @@ namespace multimedia_player
         {
             if (isPlaying)
             {
+                Storyboard spin = (Storyboard)FindResource("startSpin");
+                spin.Stop();
                 Stop();
             }
         }
@@ -279,6 +287,7 @@ namespace multimedia_player
 
         int[] ListRandomPlay;
         bool Randomly = false;
+
         private void RandomPlay_Click(object sender, RoutedEventArgs e)
         {
             if (FullPaths.Count > 0)
@@ -344,13 +353,11 @@ namespace multimedia_player
 
         private void Slider_Click(object sender, MouseButtonEventArgs e)
         {
-            var testDuration = new TimeSpan(duration.Hours, duration.Minutes, (int)Slider.Value);
+           
+            var slider = sender as Slider;
+            var testDuration = new TimeSpan(duration.Hours, duration.Minutes, (int)slider.Value);
             Player.Position = testDuration;
-        }
 
-        private void Remove_Click(object sender, RoutedEventArgs e)
-        {
-            FullPaths.RemoveAt(ListBoxFiles.SelectedIndex);
         }
 
         private void SaveToPlaylist_Click(object sender, RoutedEventArgs e)
@@ -362,16 +369,18 @@ namespace multimedia_player
                 playList.Add(song);
             }
 
-            string name = "";
             var screen = new NameDialog();
-            
+            string name;
+
             if (screen.ShowDialog() == true)
             {
                 name = screen.name;
-            } else
+            }
+            else
             {
                 name = "Playlist";
             }
+
             listOfPlaylists.Add(new PlaylistObject()
             {
                 PlaylistName = name,
@@ -405,7 +414,30 @@ namespace multimedia_player
             {
                 MessageBox.Show("Select an playlist to load");
             }
+        }
 
+        List<FileInfo> ListRemove = new List<FileInfo>();
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var checkbox = sender as CheckBox;
+
+            ListRemove.Add((FileInfo)checkbox.Tag);
+            //MessageBox.Show(checkbox.Tag.ToString());
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var checkbox = sender as CheckBox;
+            ListRemove.Remove((FileInfo)checkbox.Tag);
+        }
+
+        private void btnRemove_Click(object sender, RoutedEventArgs e)
+        {
+            //int indexRemove = 0;
+            for(int i=0;i<ListRemove.Count;i++)
+            {
+                FullPaths.Remove(ListRemove[i]);
+            }
         }
     }
 }
