@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:multimedia_player"
         mc:Ignorable="d"
         Title="Multimedia Player" Height="450" Width="800" Loaded="Window_Loaded">
-
+    <Window.Resources>
+        <local:NameConverter x:Key="converter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
@@ -65,12 +67,23 @@
 
                 <StackPanel Grid.Row="0">
                     <Label HorizontalContentAlignment="Center" Background="#757575" Foreground="White" Grid.Row="0" >Songs:</Label>
-                    <ListBox Name="ListBoxFiles" Grid.Row="1" Width="Auto" Height="200"></ListBox>
+                    <ListBox Name="ListBoxFiles" Grid.Row="1" Width="Auto" Height="200">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <CheckBox></CheckBox>
+                                    <Label Content=" "></Label>
+                                    <TextBlock Text="{Binding Name, Converter={StaticResource converter}}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Button Click="addFile_Click" FontWeight="Bold" FontSize="11" Width="80" Height="25">Load Song</Button>
+
                         <Button FontSize="11" FontWeight="Bold" Width="80" Height="25">Save To Playlist</Button>
                         <Button FontWeight="Bold" FontSize="11" Width="80" Height="25">Remove</Button>
                     </StackPanel>
@@ -92,7 +105,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Slider VerticalAlignment="Center" Grid.Column="0" Width="600" />
+                <Slider VerticalAlignment="Center" Grid.Column="0" Width="600" Name="Slider"/>
                 <Label  Name="currenttime" VerticalAlignment="Center" Grid.Column="1" Content="00:00/00:00"/>
             </Grid>
 
@@ -105,21 +118,21 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Canvas.Left="290" Canvas.Top="300" HorizontalAlignment="Center" >
-                    <Button BorderThickness="0" Height="40" Width="40" Background="White"  Style="{StaticResource mediaButton}" >
+                    <Button BorderThickness="0" Height="40" Width="40" Background="White"  Style="{StaticResource mediaButton}" Click="Previous_Click">
                         <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/previous-button.png"/>
                     </Button>
                     <CheckBox Checked="Play_Click" Height="40" Width="40" Unchecked="Pause_Click" Name="playPauseCheckbox" Style="{StaticResource playPauseCheckbox}"/>
-                    <Button BorderThickness="0" Height="40" Width="40" Background="White" Style="{StaticResource mediaButton}" >
+                    <Button BorderThickness="0" Height="40" Width="40" Background="White" Style="{StaticResource mediaButton}" Click="Stop_Click">
                         <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/stop-button.png"/>
                     </Button>
-                    <Button BorderThickness="0" Height="40" Width="40" Background="White" Style="{StaticResource mediaButton}">
+                    <Button BorderThickness="0" Height="40" Width="40" Background="White" Style="{StaticResource mediaButton}" Click="Next_Click">
                         <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/next-button.png"/>
                     </Button>
                 </StackPanel>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" Canvas.Left="147" Canvas.Top="381">Play Style:</Label>
-                    <CheckBox Style="{StaticResource shuffleCheckbox}"/>
+                    <CheckBox Style="{StaticResource shuffleCheckbox}" Checked="RandomPlay_Click" Unchecked="RemoveRanDomPlay_Click"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
