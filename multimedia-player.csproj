@@ -94,5 +94,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="button\next-button.png" />
+    <Resource Include="button\pause-button.png" />
+    <Resource Include="button\play-button.png" />
+    <Resource Include="button\previous-button.png" />
+    <Resource Include="button\stop-button.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
