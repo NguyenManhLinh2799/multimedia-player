@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
             
-            <!--Playlist-->
+            <!--col-0: Playlist-->
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -42,7 +42,21 @@
                 </StackPanel>
             </Grid>
 
-            <!--Songs-->
+            
+            <!--Col-1: spinner-->
+            <Grid Grid.Column="1">
+                <Image RenderTransformOrigin="0.5, 0.5" Height="200" Width='200' x:Name="disk" Source="button/disk.png" RenderOptions.BitmapScalingMode="HighQuality">
+                    <Image.Clip>
+                        <EllipseGeometry RadiusX="150" RadiusY="150" Center="100 100" />
+                    </Image.Clip>
+                    <Image.RenderTransform>
+                        <RotateTransform/>
+                    </Image.RenderTransform>
+                </Image>
+               
+            </Grid>
+            
+            <!--Col-2: Songs-->
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -56,7 +70,7 @@
 
                 <StackPanel Grid.Row="1">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button FontWeight="Bold" FontSize="11" Width="80" Height="25">Load Song</Button>
+                        <Button Click="addFile_Click" FontWeight="Bold" FontSize="11" Width="80" Height="25">Load Song</Button>
                         <Button FontSize="11" FontWeight="Bold" Width="80" Height="25">Save To Playlist</Button>
                         <Button FontWeight="Bold" FontSize="11" Width="80" Height="25">Remove</Button>
                     </StackPanel>

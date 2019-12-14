@@ -106,5 +106,11 @@
     <Resource Include="button\repeat-one-button.png" />
     <Resource Include="button\shuffle-button.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="button\disk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="button\pic.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

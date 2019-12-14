@@ -130,5 +130,9 @@
             </Setter>
         </Style>
 
+        <Storyboard x:Key="startSpin">
+            <DoubleAnimation Storyboard.TargetName="disk" Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                             From="0" To="360" Duration="0:0:30" RepeatBehavior="Forever"/>
+        </Storyboard>
     </Application.Resources>
 </Application>

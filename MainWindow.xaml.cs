@@ -12,6 +12,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -27,6 +28,7 @@ namespace multimedia_player
         MediaPlayer Player = new MediaPlayer();
         DispatcherTimer timer;
         int currentIndex = -1;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -50,6 +52,8 @@ namespace multimedia_player
                 currenttime.Content = $"{currentPos}/{duration}";
                 
                 int a = (Player.Position.Minutes * 60 + Player.Position.Seconds);
+
+                
                 //Slider.Maximum = a;
                 //Slider.Value += 1;
                 //Slider.
@@ -78,22 +82,24 @@ namespace multimedia_player
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ListBoxPlaylist.ItemsSource = FullPaths;
+            ListBoxFiles.ItemsSource = FullPaths;
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-        
-            if(ListBoxPlaylist.SelectedIndex >= 0)
+            Storyboard spin = (Storyboard)FindResource("startSpin");
+            if (ListBoxFiles.SelectedIndex >= 0)
             {
-                currentIndex = ListBoxPlaylist.SelectedIndex;
+                currentIndex = ListBoxFiles.SelectedIndex;
                 PlaySelectedIndex(currentIndex);
+                spin.Begin(disk);
             }
             else
             {
                 MessageBox.Show("No file selected!");
                 playPauseCheckbox.IsChecked = false;
             }
+        
         }
 
         bool isPlaying=false;
@@ -111,13 +117,17 @@ namespace multimedia_player
 
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
+            Storyboard spin = (Storyboard)FindResource("startSpin");
+
             if (isPlaying)
             {
                 Player.Pause();
+                spin.Stop(disk);
             }
             else
             {
                 Player.Play();
+                spin.Begin(disk);
             }
             isPlaying = !isPlaying;
         }
