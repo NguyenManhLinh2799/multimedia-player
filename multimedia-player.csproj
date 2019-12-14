@@ -101,5 +101,10 @@
     <Resource Include="button\previous-button.png" />
     <Resource Include="button\stop-button.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="button\repeat-button.png" />
+    <Resource Include="button\repeat-one-button.png" />
+    <Resource Include="button\shuffle-button.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

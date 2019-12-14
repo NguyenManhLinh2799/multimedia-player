@@ -7,63 +7,115 @@
         mc:Ignorable="d"
         Title="Multimedia Player" Height="450" Width="800" Loaded="Window_Loaded">
 
-    <Canvas>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <Button Width="80" Height="25" Canvas.Left="215" Canvas.Top="47" Click="addFile_Click">Add file</Button>
-        <Button Width="100" Height="25" Canvas.Left="215" Canvas.Top="77">Save Playlist</Button>
-        <Button Width="100" Height="25" Canvas.Left="215" Canvas.Top="107">Load Playlist</Button>
-        <Button Width="100" Height="25" Canvas.Left="215" Canvas.Top="137">Remove from list</Button>
-        
-        <Label Canvas.Left="147" Canvas.Top="381">Play Style:</Label>
-        <Button Canvas.Left="210" Canvas.Top="385">Sequently</Button>
-        <Button Canvas.Left="271" Canvas.Top="385">Randomly</Button>
+        <!--Row 0-->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!--Playlist-->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <Label Canvas.Left="374" Canvas.Top="381">Repeat:</Label>
-        <Button Canvas.Left="423" Canvas.Top="384">None</Button>
-        <Button Canvas.Left="460" Canvas.Top="384">Endlessly</Button>
-        
-        <!--Playlist-->
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
+                    <Label HorizontalContentAlignment="Center" Background="#757575" Foreground="White" Grid.Row="0">Playlist:</Label>
+                    <ListBox Name="ListBoxPlaylist" Grid.Row="1" Width="Auto" Height="200"></ListBox>
+                </StackPanel>
 
-            <Label Background="AntiqueWhite" Grid.Row="0" Canvas.Left="10" Canvas.Top="15">Playlist:</Label>
-            <ListBox Name="ListBoxPlaylist" Grid.Row="1" Width="200" Height="200" Canvas.Left="10" Canvas.Top="46"></ListBox>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Canvas.Top="226">
+                        <Button FontWeight="Bold" FontSize="11" Width="80" Height="25">Load Playlist</Button>
+                        <Button FontSize="11" FontWeight="Bold" Width="80" Height="25">Save Playlist</Button>
+                        <Button FontWeight="Bold" FontSize="11" Width="80" Height="25">Remove</Button>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <!--Songs-->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0">
+                    <Label HorizontalContentAlignment="Center" Background="#757575" Foreground="White" Grid.Row="0" >Songs:</Label>
+                    <ListBox Name="ListBoxFiles" Grid.Row="1" Width="Auto" Height="200"></ListBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button FontWeight="Bold" FontSize="11" Width="80" Height="25">Load Song</Button>
+                        <Button FontSize="11" FontWeight="Bold" Width="80" Height="25">Save To Playlist</Button>
+                        <Button FontWeight="Bold" FontSize="11" Width="80" Height="25">Remove</Button>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
         </Grid>
 
-        <!--Media control-->
-        <Grid Canvas.Left="58" Canvas.Top="271">
+
+        <!--Row 1-->
+        <Grid Grid.Row="1" VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Canvas.Left="75" Canvas.Top="261">
+            <Grid Grid.Row="0" Canvas.Left="75" Canvas.Top="261" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Slider VerticalAlignment="Center" Grid.Column="0" Width="600"/>
-                <Label  Name="currenttime" VerticalAlignment="Center" Grid.Column="1" Canvas.Left="711" Canvas.Top="266" Content="00:00/00:00"/>
+                <Slider VerticalAlignment="Center" Grid.Column="0" Width="600" />
+                <Label  Name="currenttime" VerticalAlignment="Center" Grid.Column="1" Content="00:00/00:00"/>
             </Grid>
 
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Canvas.Left="290" Canvas.Top="300" HorizontalAlignment="Center" >
-                <Button BorderThickness="0" Height="40" Width="40" Background="White">
-                    <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/previous-button.png"/>
-                </Button>
-                <CheckBox Checked="Play_Click" Unchecked="Pause_Click" Name="playPauseCheckbox" Style="{StaticResource playPauseCheckbox}" Canvas.Left="514" Canvas.Top="40"/>
-                <Button BorderThickness="0" Height="40" Width="40" Background="White">
-                    <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/stop-button.png"/>
-                </Button>
-                <Button BorderThickness="0" Height="40" Width="40" Background="White">
-                    <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/next-button.png"/>
-                </Button>
-            </StackPanel>
+            <!--Media control-->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Canvas.Left="290" Canvas.Top="300" HorizontalAlignment="Center" >
+                    <Button BorderThickness="0" Height="40" Width="40" Background="White"  Style="{StaticResource mediaButton}" >
+                        <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/previous-button.png"/>
+                    </Button>
+                    <CheckBox Checked="Play_Click" Height="40" Width="40" Unchecked="Pause_Click" Name="playPauseCheckbox" Style="{StaticResource playPauseCheckbox}"/>
+                    <Button BorderThickness="0" Height="40" Width="40" Background="White" Style="{StaticResource mediaButton}" >
+                        <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/stop-button.png"/>
+                    </Button>
+                    <Button BorderThickness="0" Height="40" Width="40" Background="White" Style="{StaticResource mediaButton}">
+                        <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/next-button.png"/>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" Canvas.Left="147" Canvas.Top="381">Play Style:</Label>
+                    <CheckBox Style="{StaticResource shuffleCheckbox}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" Canvas.Left="374" Canvas.Top="381">Repeat:</Label>
+                    <CheckBox Style="{StaticResource repeatCheckbox}"/>
+                    <CheckBox Style="{StaticResource repeat1Checkbox}"/>
+                </StackPanel>
+            </Grid>
+
         </Grid>
 
-
-    </Canvas>
+    </Grid>
 </Window>

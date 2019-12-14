@@ -65,10 +65,11 @@ namespace multimedia_player
         }
 
         BindingList<FileInfo> FullPaths = new BindingList<FileInfo>();
+
         private void addFile_Click(object sender, RoutedEventArgs e)
         {
             var screen = new OpenFileDialog();
-            if(screen.ShowDialog()==true)
+            if(screen.ShowDialog() == true)
             {
                 var info = new FileInfo(screen.FileName);
                 FullPaths.Add(info);
@@ -82,8 +83,8 @@ namespace multimedia_player
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-            
-            if(ListBoxPlaylist.SelectedIndex>=0)
+        
+            if(ListBoxPlaylist.SelectedIndex >= 0)
             {
                 currentIndex = ListBoxPlaylist.SelectedIndex;
                 PlaySelectedIndex(currentIndex);
@@ -91,10 +92,12 @@ namespace multimedia_player
             else
             {
                 MessageBox.Show("No file selected!");
+                playPauseCheckbox.IsChecked = false;
             }
         }
 
         bool isPlaying=false;
+
         private void PlaySelectedIndex(int i)
         {
             string filename = FullPaths[i].FullName;

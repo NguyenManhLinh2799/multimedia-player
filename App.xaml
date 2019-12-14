@@ -4,23 +4,131 @@
              xmlns:local="clr-namespace:multimedia_player"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        
+        <!--for play/pause button-->
         <Style x:Key="playPauseCheckbox" TargetType="{x:Type CheckBox}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type CheckBox}">
-                        <StackPanel Orientation="Horizontal">
+                        <Border CornerRadius="5" x:Name="background">
                             <Image x:Name="playPauseImage" Source="button/play-button.png" Width="30" RenderOptions.BitmapScalingMode="HighQuality"/>
-                            <ContentPresenter/>
-                        </StackPanel>
-
+                        </Border>
+                        
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="playPauseImage" Property="Source" Value="button/pause-button.png"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="background" Property="Background" Value="#f5f5f5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="background" Property="Background" Value="#c2c2c2"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+        
+        <!--for shuffle-->
+        <Style x:Key="shuffleCheckbox" TargetType="{x:Type CheckBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Border CornerRadius="5" x:Name="background">
+                            <Image Source="button/shuffle-button.png" Width="30" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="background" Property="Background" Value="#bdbdbd"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!--for repeat-->
+        <Style x:Key="repeatCheckbox" TargetType="{x:Type CheckBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Border CornerRadius="5" x:Name="background">
+                            <Image Source="button/repeat-button.png" Width="30" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="background" Property="Background" Value="#bdbdbd"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!--for repeat-1-->
+        <Style x:Key="repeat1Checkbox" TargetType="{x:Type CheckBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Border CornerRadius="5" x:Name="background">
+                            <Image Source="button/repeat-one-button.png" Width="30" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="background" Property="Background" Value="#bdbdbd"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!--for media buttons-->
+        <Style TargetType="{x:Type Button}" x:Key="mediaButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border CornerRadius="5" x:Name="background" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="background" Property="Background" Value="#f5f5f5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="background" Property="Background" Value="#c2c2c2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border CornerRadius="5" x:Name="background" Background="#a4a4a4" BorderThickness="0">
+                            <ContentPresenter x:Name="text" TextBlock.FontFamily="Corbel" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" TextBlock.Foreground="White"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="background" Property="Background" Value="#757575"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="background" Property="Background" Value="#494949"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Application.Resources>
 </Application>
