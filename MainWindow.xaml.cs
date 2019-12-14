@@ -40,16 +40,19 @@ namespace multimedia_player
         {
             if (Player.Source != null)
             {
-                var filename = FullPaths[currentIndex].Name;
+                //var filename = FullPaths[currentIndex].Name;
                 //var converter = new NameConverter();
                 //var shortname = converter.Convert(filename, null, null, null);
-
+                var converter = new NameConverter();
                 var currentPos = Player.Position.ToString(@"mm\:ss");
-                var duration = Player.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
+                var duration = Player.NaturalDuration.TimeSpan;
 
-                currenttime.Content = $"{currentPos}/{duration}";
-                
-                int a = (Player.Position.Minutes * 60 + Player.Position.Seconds);
+                currenttime.Content = $"{currentPos}/{duration.Minutes}:{duration.Seconds}-{currentIndex}";
+
+                int timeOfPlayer = Player.NaturalDuration.TimeSpan.Minutes * 60 + Player.NaturalDuration.TimeSpan.Seconds;
+                Slider.Maximum = timeOfPlayer;
+                Slider.Value += 1;
+
                 //Slider.Maximum = a;
                 //Slider.Value += 1;
                 //Slider.
@@ -58,10 +61,23 @@ namespace multimedia_player
                 Title = "No file selected...";
         }
 
+        int currentRandomPlay = 0;
         private void Player_MediaEnded(object sender, EventArgs e)
         {
-            currentIndex++;
+            if (currentIndex < FullPaths.Count - 1)
+            {
+                currentIndex++;
+            }
+            if(Randomly)
+            {
+                if(currentRandomPlay<FullPaths.Count-1)
+                {
+                    currentRandomPlay++;
+                    currentIndex = RandomPlay[currentRandomPlay];
+                }
+            }
             PlaySelectedIndex(currentIndex);
+            Slider.Value = 0;
         }
 
         BindingList<FileInfo> FullPaths = new BindingList<FileInfo>();
@@ -78,25 +94,42 @@ namespace multimedia_player
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ListBoxPlaylist.ItemsSource = FullPaths;
+            ListBoxFiles.ItemsSource = FullPaths;
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-        
-            if(ListBoxPlaylist.SelectedIndex >= 0)
+
+            if (isPausing)
             {
-                currentIndex = ListBoxPlaylist.SelectedIndex;
-                PlaySelectedIndex(currentIndex);
+                Player.Play();
+                isPlaying = true;
             }
             else
             {
-                MessageBox.Show("No file selected!");
-                playPauseCheckbox.IsChecked = false;
+                if(Randomly)
+                {
+                    currentIndex = RandomPlay[currentRandomPlay];
+                }
+                else
+                {
+                    if (ListBoxFiles.SelectedIndex >= 0)
+                    {
+                        currentIndex = ListBoxFiles.SelectedIndex;
+                    }
+                    else
+                    {
+                        MessageBox.Show("No file selected!");
+                        playPauseCheckbox.IsChecked = false;
+                    }
+                }
+
+                PlaySelectedIndex(currentIndex);
             }
         }
 
         bool isPlaying=false;
+        bool isPausing = false;
 
         private void PlaySelectedIndex(int i)
         {
@@ -114,12 +147,86 @@ namespace multimedia_player
             if (isPlaying)
             {
                 Player.Pause();
+                isPausing = true;
+                timer.Stop();
             }
             else
             {
                 Player.Play();
+                timer.Start();
             }
             isPlaying = !isPlaying;
+        }
+
+        private void Previous_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentIndex > 0)
+            {
+                Player.Stop();
+                currentIndex -= 1;
+                PlaySelectedIndex(currentIndex);
+                //ListBoxFiles.Items.CurrentItem(currentIndex)
+            }
+        }
+
+        private void Next_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentIndex < ListBoxFiles.Items.Count - 1)
+            {
+                Player.Stop();
+                currentIndex += 1;
+                PlaySelectedIndex(currentIndex);
+            }
+        }
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            if (isPlaying)
+            {
+                Player.Stop();
+                timer.Stop();
+                isPausing = false;
+                isPlaying = false;
+                Slider.Value = 0;
+                playPauseCheckbox.IsChecked = false;
+            }
+        }
+
+        int[] RandomPlay;
+        bool Randomly = false;
+        private void RandomPlay_Click(object sender, RoutedEventArgs e)
+        {
+            Randomly = true;
+            int n = FullPaths.Count;
+            RandomPlay = new int[n];
+
+            //khời tạo mảng
+            for (int i = 0; i < n; i++)
+            {
+                RandomPlay[i] = i;
+            }
+
+            //tiến hành random
+
+            Random ran = new Random();
+            for (int i = 0; i < 30; i++)
+            {
+                int a = ran.Next(0, n);
+                int b = ran.Next(0, n);
+                Swap(ref RandomPlay[a], ref RandomPlay[b]);
+            }
+        }
+
+        void Swap(ref int a, ref int b)
+        {
+            int temp = a;
+            a = b;
+            b = temp;
+        }
+
+        private void RemoveRanDomPlay_Click(object sender, RoutedEventArgs e)
+        {
+            Randomly = false;
         }
     }
 }
