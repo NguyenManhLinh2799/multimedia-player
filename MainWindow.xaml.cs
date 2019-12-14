@@ -49,22 +49,13 @@ namespace multimedia_player
                 //var shortname = converter.Convert(filename, null, null, null);
                 var converter = new NameConverter();
                 var currentPos = Player.Position.ToString(@"mm\:ss");
-                
+                var duration = Player.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
 
-                //currenttime.Content = $"{currentPos}/{duration.Minutes}:{duration.Seconds}-{currentIndex}";
+                currenttime.Content = $"{currentPos}/{duration}-{currentIndex}";
                 
-               // int timeOfPlayer = Player.NaturalDuration.TimeSpan.Minutes * 60 + Player.NaturalDuration.TimeSpan.Seconds;
-                Slider.Maximum = 400;
+                int timeOfPlayer = Player.NaturalDuration.TimeSpan.Minutes * 60 + Player.NaturalDuration.TimeSpan.Seconds;
+                Slider.Maximum = timeOfPlayer;
                 Slider.Value += 1;
-
-                currenttime.Content = $"{currentPos}-{currentIndex}";
-                
-                int a = (Player.Position.Minutes * 60 + Player.Position.Seconds);
-
-             
-                //Slider.Maximum = a;
-                Slider.Value += 1;
-                //Slider.
             }
             else
                 Title = "No file selected...";
@@ -339,6 +330,12 @@ namespace multimedia_player
             RepeatOne.IsChecked = false;
             isRepeatOne = false;
             isLoopRepeat = !isLoopRepeat;
+        }
+
+        private void Slider_Click(object sender, MouseButtonEventArgs e)
+        {
+            var testDuration = new TimeSpan(duration.Hours, duration.Minutes,(int)Slider.Value);
+            Player.Position = testDuration;
         }
     }
 }

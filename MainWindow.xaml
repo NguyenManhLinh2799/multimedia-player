@@ -106,7 +106,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Slider VerticalAlignment="Center" Grid.Column="0" Width="600" Name="Slider"/>
+                <Slider VerticalAlignment="Center" Grid.Column="0" Width="600" Name="Slider" IsMoveToPointEnabled="True"  MouseLeftButtonUp="Slider_Click"/>
                 <Label  Name="currenttime" VerticalAlignment="Center" Grid.Column="1" Content="00:00/00:00"/>
             </Grid>
 
