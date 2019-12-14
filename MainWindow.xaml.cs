@@ -65,28 +65,87 @@ namespace multimedia_player
 
         int currentRandomPlay = 0;
 
+        int countSong = 0;
         private void Player_MediaEnded(object sender, EventArgs e)
         {
             Storyboard spin = (Storyboard)FindResource("startSpin");
 
             spin.Stop(disk);
 
-            if (currentIndex < FullPaths.Count - 1)
+            //khi có lặp lại 1 bài mãi mãi
+            if(isRepeatOne)
             {
-                currentIndex++;
+                PlaySelectedIndex(currentIndex);
+                Slider.Value = 0;
             }
 
-            if(Randomly)
+            //khi có lặp lại playlist mãi mãi
+            if(isLoopRepeat)
             {
-                if(currentRandomPlay < RandomPlay.Length - 1)
+                if (currentIndex < FullPaths.Count - 1)
+                {
+                    currentIndex++;
+                }
+                else
+                {
+                    currentIndex = 0;
+                }
+
+                if (Randomly)
                 {
                     currentRandomPlay++;
-                    currentIndex = RandomPlay[currentRandomPlay];
+                    if (currentRandomPlay <= ListRandomPlay.Length - 1)
+                    {               
+                        currentIndex = ListRandomPlay[currentRandomPlay];
+                    }
+                    else
+                    {
+                        currentRandomPlay = 0;
+                        RanDomListSong();
+                    }
                 }
+
+                PlaySelectedIndex(currentIndex);
+                Slider.Value = 0;
+
+            }
+            if (!isLoopRepeat && !isRepeatOne)
+            {
+                countSong++;
+                if (countSong == FullPaths.Count + 1)
+                {
+                    Player.Stop();
+                    timer.Stop();
+                    isPausing = false;
+                    isPlaying = false;
+                    Slider.Value = 0;
+                    playPauseCheckbox.IsChecked = false;
+                }
+                else
+                {
+                    if (currentIndex < FullPaths.Count - 1)
+                    {
+                        currentIndex++;
+                    }
+
+                    if (Randomly)
+                    {
+
+                        if (currentRandomPlay < ListRandomPlay.Length - 1)
+                        {
+                            currentRandomPlay++;
+                            currentIndex = ListRandomPlay[currentRandomPlay];
+                        }
+
+                    }
+
+                    PlaySelectedIndex(currentIndex);
+                    Slider.Value = 0;
+                }
+
             }
 
-            PlaySelectedIndex(currentIndex);
-            Slider.Value = 0;
+
         }
 
         BindingList<FileInfo> FullPaths = new BindingList<FileInfo>();
@@ -123,7 +182,7 @@ namespace multimedia_player
             {
                 if (Randomly)
                 {
-                    currentIndex = RandomPlay[currentRandomPlay];
+                    currentIndex = ListRandomPlay[currentRandomPlay];
                     PlaySelectedIndex(currentIndex);
                 }
                 else
@@ -142,8 +201,6 @@ namespace multimedia_player
                 }
             }
         }
-                
-
 
         bool isPlaying=false;
         bool isPausing = false;
@@ -157,6 +214,7 @@ namespace multimedia_player
             Player.Play();
             isPlaying = true;
             timer.Start();
+            countSong++;
         }
 
         private void Pause_Click(object sender, RoutedEventArgs e)
@@ -199,27 +257,44 @@ namespace multimedia_player
         {
             if (isPlaying)
             {
-                Player.Stop();
-                timer.Stop();
-                isPausing = false;
-                isPlaying = false;
-                Slider.Value = 0;
-                playPauseCheckbox.IsChecked = false;
+                Stop();
             }
         }
 
-        int[] RandomPlay;
+        void Stop()
+        {
+            Player.Stop();
+            timer.Stop();
+            isPausing = false;
+            isPlaying = false;
+            Slider.Value = 0;
+            playPauseCheckbox.IsChecked = false;
+        }
+
+        int[] ListRandomPlay;
         bool Randomly = false;
         private void RandomPlay_Click(object sender, RoutedEventArgs e)
         {
-            Randomly = true;
+           if(FullPaths.Count>0)
+            {
+                Randomly = true;
+                RanDomListSong();
+            }
+           else
+            {
+                checkBoxRandomPlay.IsChecked = false;
+            }
+        }
+
+        void RanDomListSong()
+        {
             int n = FullPaths.Count;
-            RandomPlay = new int[n];
+            ListRandomPlay = new int[n];
 
             //khời tạo mảng
             for (int i = 0; i < n; i++)
             {
-                RandomPlay[i] = i;
+                ListRandomPlay[i] = i;
             }
 
             //tiến hành random
@@ -229,10 +304,9 @@ namespace multimedia_player
             {
                 int a = ran.Next(0, n);
                 int b = ran.Next(0, n);
-                Swap(ref RandomPlay[a], ref RandomPlay[b]);
+                Swap(ref ListRandomPlay[a], ref ListRandomPlay[b]);
             }
         }
-
         void Swap(ref int a, ref int b)
         {
             int temp = a;
@@ -243,6 +317,23 @@ namespace multimedia_player
         private void RemoveRanDomPlay_Click(object sender, RoutedEventArgs e)
         {
             Randomly = false;
+        }
+
+        bool isRepeatOne=false;
+        private void RepeatOne_Checked(object sender, RoutedEventArgs e)
+        {
+            LoopRepeat.IsChecked = false;
+            isLoopRepeat= false;
+            isRepeatOne = !isRepeatOne;
+        }
+
+        bool isLoopRepeat = false;
+
+        private void LoopRepeat_Click(object sender, RoutedEventArgs e)
+        {
+            RepeatOne.IsChecked = false;
+            isRepeatOne = false;
+            isLoopRepeat = !isLoopRepeat;
         }
     }
 }

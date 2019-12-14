@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:multimedia_player"
         mc:Ignorable="d"
-        Title="Multimedia Player" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="Multimedia Player" Height="600" Width="1000" Loaded="Window_Loaded">
     <Window.Resources>
         <local:NameConverter x:Key="converter"/>
     </Window.Resources>
@@ -22,7 +22,7 @@
                 <ColumnDefinition Width="5*"/>
                 <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
-            
+
             <!--col-0: Playlist-->
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
@@ -30,9 +30,9 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0">
+                <StackPanel Grid.Row="0" Margin="10,0,0,0">
                     <Label HorizontalContentAlignment="Center" Background="#757575" Foreground="White" Grid.Row="0">Playlist:</Label>
-                    <ListBox Name="ListBoxPlaylist" Grid.Row="1" Width="Auto" Height="200"></ListBox>
+                    <ListBox Name="ListBoxPlaylist" Grid.Row="1" Width="Auto" Height="315"></ListBox>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -44,10 +44,11 @@
                 </StackPanel>
             </Grid>
 
-            
+
             <!--Col-1: spinner-->
             <Grid Grid.Column="1">
-                <Image RenderTransformOrigin="0.5, 0.5" Height="200" Width='200' x:Name="disk" Source="button/disk.png" RenderOptions.BitmapScalingMode="HighQuality">
+                
+                <Image RenderTransformOrigin="0.5, 0.5" Height="250" Width='250' x:Name="disk" Source="button/disk.png" RenderOptions.BitmapScalingMode="HighQuality">
                     <Image.Clip>
                         <EllipseGeometry RadiusX="150" RadiusY="150" Center="100 100" />
                     </Image.Clip>
@@ -55,9 +56,9 @@
                         <RotateTransform/>
                     </Image.RenderTransform>
                 </Image>
-               
+
             </Grid>
-            
+
             <!--Col-2: Songs-->
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
@@ -65,9 +66,9 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="0">
+                <StackPanel Grid.Row="0" Margin="0,0,10,0">
                     <Label HorizontalContentAlignment="Center" Background="#757575" Foreground="White" Grid.Row="0" >Songs:</Label>
-                    <ListBox Name="ListBoxFiles" Grid.Row="1" Width="Auto" Height="200">
+                    <ListBox Name="ListBoxFiles" Grid.Row="1" Width="Auto" Height="315">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -132,13 +133,13 @@
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" Canvas.Left="147" Canvas.Top="381">Play Style:</Label>
-                    <CheckBox Style="{StaticResource shuffleCheckbox}" Checked="RandomPlay_Click" Unchecked="RemoveRanDomPlay_Click"/>
+                    <CheckBox Style="{StaticResource shuffleCheckbox}" Checked="RandomPlay_Click" Unchecked="RemoveRanDomPlay_Click" Name="checkBoxRandomPlay"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" Canvas.Left="374" Canvas.Top="381">Repeat:</Label>
-                    <CheckBox Style="{StaticResource repeatCheckbox}"/>
-                    <CheckBox Style="{StaticResource repeat1Checkbox}"/>
+                    <CheckBox Style="{StaticResource repeatCheckbox}" Name="LoopRepeat" Click="LoopRepeat_Click"/>
+                    <CheckBox Style="{StaticResource repeat1Checkbox}" Name="RepeatOne" Click="RepeatOne_Checked"/>
                 </StackPanel>
             </Grid>
 
