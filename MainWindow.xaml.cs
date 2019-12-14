@@ -1,22 +1,14 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace multimedia_player
@@ -24,11 +16,15 @@ namespace multimedia_player
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+
     public partial class MainWindow : Window
     {
         MediaPlayer Player = new MediaPlayer();
         DispatcherTimer timer;
         int currentIndex = -1;
+        TimeSpan duration;
+        BindingList<PlaylistObject> listOfPlaylists = new BindingList<PlaylistObject>();
+        string playListFile = System.AppDomain.CurrentDomain.BaseDirectory + "playList.json";
 
 
         public MainWindow()
@@ -44,7 +40,7 @@ namespace multimedia_player
         {
             if (Player.Source != null && Player.NaturalDuration.HasTimeSpan)
             {
-             
+
                 //var filename = FullPaths[currentIndex].Name;
                 //var converter = new NameConverter();
                 //var shortname = converter.Convert(filename, null, null, null);
@@ -54,7 +50,7 @@ namespace multimedia_player
                 var duration = Player.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
 
                 currenttime.Content = $"{currentPos}/{duration}-{currentIndex}";
-                
+
                 int timeOfPlayer = Player.NaturalDuration.TimeSpan.Minutes * 60 + Player.NaturalDuration.TimeSpan.Seconds;
                 Slider.Maximum = timeOfPlayer;
                 Slider.Value += 1;
@@ -73,14 +69,14 @@ namespace multimedia_player
             spin.Stop(disk);
 
             //khi có lặp lại 1 bài mãi mãi
-            if(isRepeatOne)
+            if (isRepeatOne)
             {
                 PlaySelectedIndex(currentIndex);
                 Slider.Value = 0;
             }
 
             //khi có lặp lại playlist mãi mãi
-            if(isLoopRepeat)
+            if (isLoopRepeat)
             {
                 if (currentIndex < FullPaths.Count - 1)
                 {
@@ -95,7 +91,7 @@ namespace multimedia_player
                 {
                     currentRandomPlay++;
                     if (currentRandomPlay <= ListRandomPlay.Length - 1)
-                    {               
+                    {
                         currentIndex = ListRandomPlay[currentRandomPlay];
                     }
                     else
@@ -144,8 +140,6 @@ namespace multimedia_player
                 }
 
             }
-
-
         }
 
         BindingList<FileInfo> FullPaths = new BindingList<FileInfo>();
@@ -154,7 +148,7 @@ namespace multimedia_player
         {
             var screen = new OpenFileDialog();
 
-            if(screen.ShowDialog() == true)
+            if (screen.ShowDialog() == true)
             {
                 var info = new FileInfo(screen.FileName);
                 FullPaths.Add(info);
@@ -164,6 +158,19 @@ namespace multimedia_player
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ListBoxFiles.ItemsSource = FullPaths;
+            string line;
+            using (StreamReader sr = new StreamReader(playListFile))
+            {
+                line = sr.ReadToEnd();
+            }
+            if (line != "")
+            {
+                listOfPlaylists = JsonConvert.DeserializeObject<BindingList<PlaylistObject>>(line);
+                Debug.WriteLine($"DMC DAY NE:{listOfPlaylists}");
+
+            }
+
+            ListBoxPlaylist.ItemsSource = listOfPlaylists;
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
@@ -172,7 +179,6 @@ namespace multimedia_player
 
             if (isPausing == true)
             {
-
                 timer.Start();
                 Player.Play();
                 isPlaying = true;
@@ -202,7 +208,7 @@ namespace multimedia_player
             }
         }
 
-        bool isPlaying=false;
+        bool isPlaying = false;
         bool isPausing = false;
 
         private void PlaySelectedIndex(int i)
@@ -275,12 +281,12 @@ namespace multimedia_player
         bool Randomly = false;
         private void RandomPlay_Click(object sender, RoutedEventArgs e)
         {
-           if(FullPaths.Count>0)
+            if (FullPaths.Count > 0)
             {
                 Randomly = true;
                 RanDomListSong();
             }
-           else
+            else
             {
                 checkBoxRandomPlay.IsChecked = false;
             }
@@ -319,11 +325,11 @@ namespace multimedia_player
             Randomly = false;
         }
 
-        bool isRepeatOne=false;
+        bool isRepeatOne = false;
         private void RepeatOne_Checked(object sender, RoutedEventArgs e)
         {
             LoopRepeat.IsChecked = false;
-            isLoopRepeat= false;
+            isLoopRepeat = false;
             isRepeatOne = !isRepeatOne;
         }
 
@@ -338,8 +344,68 @@ namespace multimedia_player
 
         private void Slider_Click(object sender, MouseButtonEventArgs e)
         {
-            var testDuration = new TimeSpan(duration.Hours, duration.Minutes,(int)Slider.Value);
+            var testDuration = new TimeSpan(duration.Hours, duration.Minutes, (int)Slider.Value);
             Player.Position = testDuration;
+        }
+
+        private void Remove_Click(object sender, RoutedEventArgs e)
+        {
+            FullPaths.RemoveAt(ListBoxFiles.SelectedIndex);
+        }
+
+        private void SaveToPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            BindingList<FileInfo> playList = new BindingList<FileInfo>();
+
+            foreach (FileInfo song in FullPaths)
+            {
+                playList.Add(song);
+            }
+
+            string name = "";
+            var screen = new NameDialog();
+            
+            if (screen.ShowDialog() == true)
+            {
+                name = screen.name;
+            } else
+            {
+                name = "Playlist";
+            }
+            listOfPlaylists.Add(new PlaylistObject()
+            {
+                PlaylistName = name,
+                Playlist = playList
+            });
+        }
+
+        private void RemovePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            listOfPlaylists.RemoveAt(ListBoxPlaylist.SelectedIndex);
+        }
+
+        private void SaveToFile_Click(object sender, RoutedEventArgs e)
+        {
+            using (StreamWriter sw = new StreamWriter(playListFile))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                string json = JsonConvert.SerializeObject(listOfPlaylists, Formatting.Indented);
+                sw.WriteLine(json);
+            }
+        }
+
+        private void LoadPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (ListBoxPlaylist.SelectedIndex >= 0)
+            {
+                FullPaths = listOfPlaylists[ListBoxPlaylist.SelectedIndex].Playlist;
+                ListBoxFiles.ItemsSource = FullPaths;
+            }
+            else
+            {
+                MessageBox.Show("Select an playlist to load");
+            }
+
         }
     }
 }

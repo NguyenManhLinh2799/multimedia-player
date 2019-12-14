@@ -1,0 +1,19 @@
+﻿<Window x:Class="multimedia_player.NameDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:multimedia_player"
+        mc:Ignorable="d"
+        Title="NameDialog" Height="200" Width="400">
+    <Canvas>
+        <StackPanel Canvas.Left="43" Canvas.Top="32">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Name for Playlist:"/>
+                <TextBox Name="NameTextBox" Width="200" Height="25"/>
+            </StackPanel>
+
+            <Button Click="OK_Click" IsDefault="True" Margin="30" Content="OK" Width="80" Height="30"/>
+        </StackPanel>
+    </Canvas>
+</Window>
