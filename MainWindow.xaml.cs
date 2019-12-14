@@ -335,5 +335,11 @@ namespace multimedia_player
             isRepeatOne = false;
             isLoopRepeat = !isLoopRepeat;
         }
+
+        private void Slider_Click(object sender, MouseButtonEventArgs e)
+        {
+            var testDuration = new TimeSpan(duration.Hours, duration.Minutes,(int)Slider.Value);
+            Player.Position = testDuration;
+        }
     }
 }
