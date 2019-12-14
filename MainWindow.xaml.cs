@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Gma.System.MouseKeyHook;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace multimedia_player
         BindingList<PlaylistObject> listOfPlaylists = new BindingList<PlaylistObject>();
         string playListFile = System.AppDomain.CurrentDomain.BaseDirectory + "playList.json";
 
+        private IKeyboardMouseEvents _hook;
 
         public MainWindow()
         {
@@ -35,6 +37,10 @@ namespace multimedia_player
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += timer_Tick;
+
+            //đăng kí sự kiện hook
+            _hook = Hook.GlobalEvents();
+            _hook.KeyUp += KeyUp_hook;
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -63,6 +69,75 @@ namespace multimedia_player
         int currentRandomPlay = 0;
 
         int countSong = 0;
+        void LoopOne()
+        {
+            PlaySelectedIndex(currentIndex);
+            Slider.Value = 0;
+        }
+
+        void Loop()
+        {
+            if (currentIndex < FullPaths.Count - 1)
+            {
+                currentIndex++;
+            }
+            else
+            {
+                currentIndex = 0;
+            }
+
+            if (Randomly)
+            {
+                currentRandomPlay++;
+                if (currentRandomPlay <= ListRandomPlay.Length - 1)
+                {
+                    currentIndex = ListRandomPlay[currentRandomPlay];
+                }
+                else
+                {
+                    currentRandomPlay = 0;
+                    RanDomListSong();
+                }
+            }
+
+            PlaySelectedIndex(currentIndex);
+            Slider.Value = 0;
+        }
+
+        void NotLoop()
+        {
+            countSong++;
+            if (countSong == FullPaths.Count+1)
+            {
+                Player.Stop();
+                timer.Stop();
+                isPausing = false;
+                isPlaying = false;
+                Slider.Value = 0;
+                playPauseCheckbox.IsChecked = false;
+            }
+            else
+            {
+                if (currentIndex < FullPaths.Count - 1)
+                {
+                    currentIndex++;
+                }
+
+                if (Randomly)
+                {
+
+                    if (currentRandomPlay < ListRandomPlay.Length - 1)
+                    {
+                        currentRandomPlay++;
+                        currentIndex = ListRandomPlay[currentRandomPlay];
+                    }
+
+                }
+
+                PlaySelectedIndex(currentIndex);
+                Slider.Value = 0;
+            }
+        }
         private void Player_MediaEnded(object sender, EventArgs e)
         {
             Storyboard spin = (Storyboard)FindResource("startSpin");
@@ -72,74 +147,19 @@ namespace multimedia_player
             //khi có lặp lại 1 bài mãi mãi
             if (isRepeatOne)
             {
-                PlaySelectedIndex(currentIndex);
-                Slider.Value = 0;
+                LoopOne();
             }
 
             //khi có lặp lại playlist mãi mãi
             if (isLoopRepeat)
             {
-                if (currentIndex < FullPaths.Count - 1)
-                {
-                    currentIndex++;
-                }
-                else
-                {
-                    currentIndex = 0;
-                }
 
-                if (Randomly)
-                {
-                    currentRandomPlay++;
-                    if (currentRandomPlay <= ListRandomPlay.Length - 1)
-                    {
-                        currentIndex = ListRandomPlay[currentRandomPlay];
-                    }
-                    else
-                    {
-                        currentRandomPlay = 0;
-                        RanDomListSong();
-                    }
-                }
-
-                PlaySelectedIndex(currentIndex);
-                Slider.Value = 0;
-
+                Loop();
             }
             if (!isLoopRepeat && !isRepeatOne)
             {
-                countSong++;
-                if (countSong == FullPaths.Count + 1)
-                {
-                    Player.Stop();
-                    timer.Stop();
-                    isPausing = false;
-                    isPlaying = false;
-                    Slider.Value = 0;
-                    playPauseCheckbox.IsChecked = false;
-                }
-                else
-                {
-                    if (currentIndex < FullPaths.Count - 1)
-                    {
-                        currentIndex++;
-                    }
 
-                    if (Randomly)
-                    {
-
-                        if (currentRandomPlay < ListRandomPlay.Length - 1)
-                        {
-                            currentRandomPlay++;
-                            currentIndex = ListRandomPlay[currentRandomPlay];
-                        }
-
-                    }
-
-                    PlaySelectedIndex(currentIndex);
-                    Slider.Value = 0;
-                }
-
+                NotLoop();
             }
         }
 
@@ -165,21 +185,31 @@ namespace multimedia_player
         {
             ListBoxFiles.ItemsSource = FullPaths;
             string line;
-            using (StreamReader sr = new StreamReader(playListFile))
+            if(File.Exists(playListFile))
             {
-                line = sr.ReadToEnd();
-            }
-            if (line != "")
-            {
-                listOfPlaylists = JsonConvert.DeserializeObject<BindingList<PlaylistObject>>(line);
-                Debug.WriteLine($"DMC DAY NE:{listOfPlaylists}");
+                using (StreamReader sr = new StreamReader(playListFile))
+                {
+                    line = sr.ReadToEnd();
+                }
+                if (line != "")
+                {
+                    listOfPlaylists = JsonConvert.DeserializeObject<BindingList<PlaylistObject>>(line);
+                    Debug.WriteLine($"DMC DAY NE:{listOfPlaylists}");
+
+                }
 
             }
 
+            //var playList= listOfPlaylists.Playlist;
             ListBoxPlaylist.ItemsSource = listOfPlaylists;
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
+        {
+            Play();
+        }
+
+        void Play()
         {
             Storyboard spin = (Storyboard)FindResource("startSpin");
 
@@ -226,10 +256,15 @@ namespace multimedia_player
             Player.Play();
             isPlaying = true;
             timer.Start();
-            countSong++;
+            //countSong++;
         }
 
         private void Pause_Click(object sender, RoutedEventArgs e)
+        {
+            Pause();
+        }
+
+        void Pause()
         {
             Storyboard spin = (Storyboard)FindResource("startSpin");
 
@@ -245,23 +280,58 @@ namespace multimedia_player
 
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
-            if (currentIndex > 0)
+            Previous();
+        }
+
+        void Previous()
+        {
+            if (Randomly)
             {
-                Player.Stop();
-                currentIndex -= 1;
-                PlaySelectedIndex(currentIndex);
-                //ListBoxFiles.Items.CurrentItem(currentIndex)
+                if (currentRandomPlay > 0)
+                {
+                    Player.Stop();
+                    Slider.Value = 0;
+                    currentRandomPlay -= 1;
+                    currentIndex = ListRandomPlay[currentRandomPlay];
+                    PlaySelectedIndex(currentIndex);
+                    //ListBoxFiles.Items.CurrentItem(currentIndex)
+                }
+            }
+            else
+            {
+                if (currentIndex > 0)
+                {
+                    Player.Stop();
+                    Slider.Value = 0;
+                    currentIndex -= 1;
+                    PlaySelectedIndex(currentIndex);
+                    //ListBoxFiles.Items.CurrentItem(currentIndex)
+                }
             }
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
+            Next();
+        }
 
-            if (currentIndex < ListBoxFiles.Items.Count - 1)
+        void Next()
+        {
+            //khi có lặp lại 1 bài mãi mãi
+            if (isRepeatOne)
             {
-                Player.Stop();
-                currentIndex += 1;
-                PlaySelectedIndex(currentIndex);
+                LoopOne();
+            }
+
+            //khi có lặp lại playlist mãi mãi
+            if (isLoopRepeat)
+            {
+                Loop();
+            }
+            if (!isLoopRepeat && !isRepeatOne)
+            {
+
+                NotLoop();
             }
         }
 
@@ -386,6 +456,8 @@ namespace multimedia_player
                 PlaylistName = name,
                 Playlist = playList
             });
+
+            //ListBoxPlaylist.ItemsSource = listOfPlaylists;
         }
 
         private void RemovePlaylist_Click(object sender, RoutedEventArgs e)
@@ -437,6 +509,37 @@ namespace multimedia_player
             for(int i=0;i<ListRemove.Count;i++)
             {
                 FullPaths.Remove(ListRemove[i]);
+            }
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            _hook.KeyUp -= KeyUp_hook;
+            _hook.Dispose();
+        }
+
+        private void KeyUp_hook(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.Control&& (e.KeyCode == System.Windows.Forms.Keys.Space))
+            {
+               if(isPlaying)
+                {
+                    Pause();
+                }
+               else
+                {
+                    Play();
+                }
+            }
+
+            if (e.Control &&  (e.KeyCode == System.Windows.Forms.Keys.Right))
+            {
+                Next();
+            }
+
+            if (e.Control && (e.KeyCode == System.Windows.Forms.Keys.Left))
+            {
+                Previous();
             }
         }
     }
