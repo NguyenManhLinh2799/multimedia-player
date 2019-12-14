@@ -51,13 +51,13 @@ namespace multimedia_player
                 var currentPos = Player.Position.ToString(@"mm\:ss");
                 
 
-                currenttime.Content = $"{currentPos}/{duration.Minutes}:{duration.Seconds}-{currentIndex}";
+                //currenttime.Content = $"{currentPos}/{duration.Minutes}:{duration.Seconds}-{currentIndex}";
                 
-                int timeOfPlayer = Player.NaturalDuration.TimeSpan.Minutes * 60 + Player.NaturalDuration.TimeSpan.Seconds;
-                Slider.Maximum = timeOfPlayer;
+               // int timeOfPlayer = Player.NaturalDuration.TimeSpan.Minutes * 60 + Player.NaturalDuration.TimeSpan.Seconds;
+                Slider.Maximum = 400;
                 Slider.Value += 1;
 
-                currenttime.Content = $"{currentPos}/{duration}-{currentIndex}";
+                currenttime.Content = $"{currentPos}-{currentIndex}";
                 
                 int a = (Player.Position.Minutes * 60 + Player.Position.Seconds);
 
@@ -113,33 +113,41 @@ namespace multimedia_player
         {
             Storyboard spin = (Storyboard)FindResource("startSpin");
 
-            if (ListBoxFiles.SelectedIndex >= 0)
+
+            if (isPausing == true)
             {
-                if (isPausing == true)
-                {
-                    Player.Play();
-                    isPlaying = true;
-                }
-                else
-                {
-                    if (Randomly)
-                    {
-                        currentIndex = RandomPlay[currentRandomPlay];
-                    }
-                    else
-                    {
-                        currentIndex = ListBoxFiles.SelectedIndex;
-                    }
-                }
-
-                PlaySelectedIndex(currentIndex);
-
+                Player.Play();
+                isPlaying = true;
             }
             else
             {
-                MessageBox.Show("No file selected!");
-                playPauseCheckbox.IsChecked = false;
+                if (Randomly)
+                {
+                    currentIndex = RandomPlay[currentRandomPlay];
+                    PlaySelectedIndex(currentIndex);
+
+                }
+                else
+                {
+                    if (ListBoxFiles.SelectedIndex >= 0)
+                    {
+                        currentIndex = ListBoxFiles.SelectedIndex;
+                        PlaySelectedIndex(currentIndex);
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("No file selected!");
+                        playPauseCheckbox.IsChecked = false;
+                    }
+                }
             }
+        }
+                
+
+
+            
+   
 
             //if (isPausing)
             //{
@@ -168,7 +176,7 @@ namespace multimedia_player
             //    }
             //}
 
-        }
+        
 
         bool isPlaying=false;
         bool isPausing = false;
@@ -180,7 +188,7 @@ namespace multimedia_player
 
             Player.Open(new Uri(filename, UriKind.Absolute));
 
-            duration = Player.NaturalDuration.TimeSpan;
+            //duration = Player.NaturalDuration.TimeSpan;
             Player.Play();
             isPlaying = true;
             timer.Start();
