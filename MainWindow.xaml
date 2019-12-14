@@ -6,33 +6,64 @@
         xmlns:local="clr-namespace:multimedia_player"
         mc:Ignorable="d"
         Title="Multimedia Player" Height="450" Width="800" Loaded="Window_Loaded">
-        
+
     <Canvas>
-        <Label Canvas.Left="10" Canvas.Top="15">Playlist</Label>
-        <ListBox Name="ListBoxPlaylist" Width="200" Height="200" Canvas.Left="10" Canvas.Top="46"></ListBox>
+
         <Button Width="80" Height="25" Canvas.Left="215" Canvas.Top="47" Click="addFile_Click">Add file</Button>
         <Button Width="100" Height="25" Canvas.Left="215" Canvas.Top="77">Save Playlist</Button>
         <Button Width="100" Height="25" Canvas.Left="215" Canvas.Top="107">Load Playlist</Button>
         <Button Width="100" Height="25" Canvas.Left="215" Canvas.Top="137">Remove from list</Button>
         
-        <Label Canvas.Left="353" Canvas.Top="46">Playing:</Label>
-        <Label Canvas.Left="353" Canvas.Top="78">(file name and video screen)</Label>
+        <Label Canvas.Left="147" Canvas.Top="381">Play Style:</Label>
+        <Button Canvas.Left="210" Canvas.Top="385">Sequently</Button>
+        <Button Canvas.Left="271" Canvas.Top="385">Randomly</Button>
+
+        <Label Canvas.Left="374" Canvas.Top="381">Repeat:</Label>
+        <Button Canvas.Left="423" Canvas.Top="384">None</Button>
+        <Button Canvas.Left="460" Canvas.Top="384">Endlessly</Button>
         
-        <Slider Width="600" Canvas.Left="100" Canvas.Top="300"></Slider>
-        <Label Canvas.Left="712" Canvas.Top="297" Name="currenttime">00:00/00:00</Label>
-        
-        <Button Canvas.Left="10" Click="Play_Click" Canvas.Top="300">Play</Button>
-        <Button Canvas.Left="40" Click="Pause_Click" Canvas.Top="300">Pause</Button>
-        <Button Canvas.Left="40" Canvas.Top="324">Stop</Button>
-        <Button Canvas.Left="10" Canvas.Top="348">Next</Button>
-        <Button Canvas.Left="43" Canvas.Top="348">Previous</Button>
-        
-        <Label Canvas.Left="147" Canvas.Top="338">Play Style:</Label>
-        <Button Canvas.Left="210" Canvas.Top="341">Sequently</Button>
-        <Button Canvas.Left="271" Canvas.Top="341">Randomly</Button>
-        
-        <Label Canvas.Left="374" Canvas.Top="338">Repeat:</Label>
-        <Button Canvas.Left="423" Canvas.Top="341">None</Button>
-        <Button Canvas.Left="460" Canvas.Top="341">Endlessly</Button>
+        <!--Playlist-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Background="AntiqueWhite" Grid.Row="0" Canvas.Left="10" Canvas.Top="15">Playlist:</Label>
+            <ListBox Name="ListBoxPlaylist" Grid.Row="1" Width="200" Height="200" Canvas.Left="10" Canvas.Top="46"></ListBox>
+        </Grid>
+
+        <!--Media control-->
+        <Grid Canvas.Left="58" Canvas.Top="271">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Canvas.Left="75" Canvas.Top="261">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Slider VerticalAlignment="Center" Grid.Column="0" Width="600"/>
+                <Label  Name="currenttime" VerticalAlignment="Center" Grid.Column="1" Canvas.Left="711" Canvas.Top="266" Content="00:00/00:00"/>
+            </Grid>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Canvas.Left="290" Canvas.Top="300" HorizontalAlignment="Center" >
+                <Button BorderThickness="0" Height="40" Width="40" Background="White">
+                    <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/previous-button.png"/>
+                </Button>
+                <CheckBox Checked="Play_Click" Unchecked="Pause_Click" Name="playPauseCheckbox" Style="{StaticResource playPauseCheckbox}" Canvas.Left="514" Canvas.Top="40"/>
+                <Button BorderThickness="0" Height="40" Width="40" Background="White">
+                    <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/stop-button.png"/>
+                </Button>
+                <Button BorderThickness="0" Height="40" Width="40" Background="White">
+                    <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="button/next-button.png"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+
     </Canvas>
 </Window>

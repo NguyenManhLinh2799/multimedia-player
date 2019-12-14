@@ -82,6 +82,7 @@ namespace multimedia_player
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
+            
             if(ListBoxPlaylist.SelectedIndex>=0)
             {
                 currentIndex = ListBoxPlaylist.SelectedIndex;
