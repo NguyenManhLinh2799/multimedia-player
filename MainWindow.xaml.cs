@@ -107,7 +107,7 @@ namespace multimedia_player
         void NotLoop()
         {
             countSong++;
-            if (countSong == FullPaths.Count+1)
+            if (countSong >= FullPaths.Count)
             {
                 Player.Stop();
                 timer.Stop();
@@ -249,14 +249,22 @@ namespace multimedia_player
 
         private void PlaySelectedIndex(int i)
         {
-            Storyboard spin = (Storyboard)FindResource("startSpin");
-            spin.Begin(disk, true);
-            string filename = FullPaths[i].FullName;
-            Player.Open(new Uri(filename, UriKind.Absolute));
-            Player.Play();
-            isPlaying = true;
-            timer.Start();
-            //countSong++;
+            if(FullPaths.Count>0)
+            {
+                Storyboard spin = (Storyboard)FindResource("startSpin");
+                spin.Begin(disk, true);
+                string filename = FullPaths[i].FullName;
+                Player.Open(new Uri(filename, UriKind.Absolute));
+                Player.Play();
+                isPlaying = true;
+                timer.Start();
+                //countSong++;
+                ListBoxFiles.SelectedIndex = i;
+            }
+            else
+            {
+                Stop();
+            }
         }
 
         private void Pause_Click(object sender, RoutedEventArgs e)
@@ -337,16 +345,14 @@ namespace multimedia_player
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
-            if (isPlaying)
-            {
-                Storyboard spin = (Storyboard)FindResource("startSpin");
-                spin.Stop();
-                Stop();
-            }
+            Stop();
         }
 
         void Stop()
         {
+            Storyboard spin = (Storyboard)FindResource("startSpin");
+            spin.Stop(disk);
+            //spin.Pause();
             Player.Stop();
             timer.Stop();
             isPausing = false;
