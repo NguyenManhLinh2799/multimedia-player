@@ -191,6 +191,8 @@
             </Grid>
 
         </Grid>
+        <Label Content="Player:" HorizontalAlignment="Left" Margin="468,10,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+        <Label Content="no player" Name="lbPlayer" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="312,36,0,0" Grid.Row="1" VerticalAlignment="Top" Width="378"/>
 
     </Grid>
 </Window>

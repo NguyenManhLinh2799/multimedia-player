@@ -260,6 +260,11 @@ namespace multimedia_player
                 timer.Start();
                 //countSong++;
                 ListBoxFiles.SelectedIndex = i;
+                var lbname = FullPaths[i].Name;
+                //var converter = new NameConverter();               
+                var converter = new NameConverter();
+                var shortname = converter.Convert(lbname, null, null, null) ;
+                lbPlayer.Content = shortname;
             }
             else
             {
