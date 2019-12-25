@@ -111,7 +111,7 @@
 
                 <StackPanel Grid.Row="0" Margin="0,0,10,0">
                     <Label HorizontalContentAlignment="Center" Background="#757575" Foreground="White" Grid.Row="0" >Songs:</Label>
-                    <ListBox Name="ListBoxFiles" Grid.Row="1" Width="Auto" Height="315">
+                    <ListBox Name="ListBoxFiles" Grid.Row="1" Width="Auto" Height="315" MouseDoubleClick="SelectSong_Click">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Name="SPListBox">
@@ -153,7 +153,13 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Slider VerticalAlignment="Center" Grid.Column="0" Width="Auto" MinWidth="600" Name="Slider"  IsMoveToPointEnabled="True"   MouseUp="Slider_Click"/>
+                <Slider VerticalAlignment="Center" Grid.Column="0" Width="Auto" MinWidth="600" Name="Slider"  IsMoveToPointEnabled="True"   MouseUp="Slider_Click" MouseLeftButtonUp="Slider_Click">
+                    <!--<Slider.Template>
+                        <ControlTemplate>
+                            <ProgressBar x:Name="progressbar"></ProgressBar>
+                        </ControlTemplate>
+                    </Slider.Template>-->
+                </Slider>
                 <Label  Name="currenttime" VerticalAlignment="Center" Grid.Column="1" Content="00:00/00:00"/>
             </Grid>
 

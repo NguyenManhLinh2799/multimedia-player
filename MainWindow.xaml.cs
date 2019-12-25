@@ -61,6 +61,7 @@ namespace multimedia_player
                 int timeOfPlayer = Player.NaturalDuration.TimeSpan.Minutes * 60 + Player.NaturalDuration.TimeSpan.Seconds;
                 Slider.Maximum = timeOfPlayer;
                 Slider.Value += 1;
+                
             }
             else
                 Title = "No file selected...";
@@ -114,13 +115,19 @@ namespace multimedia_player
                 isPausing = false;
                 isPlaying = false;
                 Slider.Value = 0;
+                Stop();
                 playPauseCheckbox.IsChecked = false;
+                countSong = 0;
             }
             else
             {
                 if (currentIndex < FullPaths.Count - 1)
                 {
                     currentIndex++;
+                }
+                else
+                {
+                    currentIndex = 0;
                 }
 
                 if (Randomly)
@@ -552,6 +559,14 @@ namespace multimedia_player
             {
                 Previous();
             }
+        }
+
+        private void SelectSong_Click(object sender, MouseButtonEventArgs e)
+        {
+            Stop();
+            playPauseCheckbox.IsChecked=true;
+            currentIndex = ListBoxFiles.SelectedIndex;
+            PlaySelectedIndex(currentIndex);
         }
     }
 }
