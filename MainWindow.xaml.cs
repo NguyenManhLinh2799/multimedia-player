@@ -178,11 +178,15 @@ namespace multimedia_player
         private void addFile_Click(object sender, RoutedEventArgs e)
         {
             var screen = new OpenFileDialog();
-
+            screen.Multiselect = true;
+            
             if (screen.ShowDialog() == true)
             {
-                var info = new FileInfo(screen.FileName);
-                FullPaths.Add(info);
+                foreach (var file in screen.FileNames)
+                {
+                    var info = new FileInfo(file);
+                    FullPaths.Add(info);
+                }
                 //CheckBox ch = new CheckBox();
                 //countCheckBox++;
                 //tagListBox.Add(countCheckBox);
@@ -281,7 +285,7 @@ namespace multimedia_player
                 //var converter = new NameConverter();               
                 var converter = new NameConverter();
                 var shortname = converter.Convert(lbname, null, null, null) ;
-                lbPlayer.Content = shortname;
+                lbPlayer.Text = shortname.ToString();
             }
             else
             {

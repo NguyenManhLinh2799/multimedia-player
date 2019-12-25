@@ -98,7 +98,7 @@
                         </Image.RenderTransform>
                     </Image>
                     <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" Content="Playing:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" Content="no song" Name="lbPlayer" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Width="378"/>
+                    <TextBlock FontSize="15" FontWeight="Bold" TextAlignment="Center" TextWrapping="Wrap" Name="lbPlayer" Width="378"/>
                 </StackPanel>
             </Grid>
 
@@ -121,7 +121,7 @@
                                         </CheckBox.Tag>
                                     </CheckBox>
                                     <Label></Label>
-                                    <TextBlock FontSize="15" FontWeight="Bold" FontFamily="Corbel" Text="{Binding Name, Converter={StaticResource converter}}"/>
+                                    <TextBlock FontSize="15" Text="{Binding Name, Converter={StaticResource converter}}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -154,7 +154,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Slider PreviewMouseUp="Slider_Click" VerticalAlignment="Center" Grid.Column="0" Width="Auto" MinWidth="600" Name="Slider" IsMoveToPointEnabled="True"  MouseUp="Slider_Click"/>
-                <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" Name="currenttime" VerticalAlignment="Center" Grid.Column="1" Content="00:00/00:00"/>
+                <Label FontSize="15" Name="currenttime" VerticalAlignment="Center" Grid.Column="1" Content="00:00/00:00"/>
 
             </Grid>
 
