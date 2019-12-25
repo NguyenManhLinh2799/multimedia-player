@@ -10,6 +10,11 @@ using System.Windows.Data;
 
 namespace multimedia_player
 {
+    class Data
+    {
+        public BindingList<PlaylistObject> listOfPlayLists { get; set; }
+        public BindingList<FileInfo> lastTimePlaying { get; set; }
+    }
     class PlaylistObject: IValueConverter
     {
         public string PlaylistName { get; set; }

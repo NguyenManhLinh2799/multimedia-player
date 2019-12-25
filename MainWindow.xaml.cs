@@ -25,7 +25,8 @@ namespace multimedia_player
         DispatcherTimer timer;
         int currentIndex = -1;
         TimeSpan duration;
-        BindingList<PlaylistObject> listOfPlaylists = new BindingList<PlaylistObject>();
+        Data dataFromFile = new Data();
+        //BindingList<PlaylistObject> listOfPlaylists = new BindingList<PlaylistObject>();
         string playListFile = System.AppDomain.CurrentDomain.BaseDirectory + "playList.json";
 
         private IKeyboardMouseEvents _hook;
@@ -56,14 +57,14 @@ namespace multimedia_player
 
                 var duration = Player.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
 
-                currenttime.Content = $"{currentPos}/{duration}-{currentIndex}";
+                currenttime.Content = $"{currentPos}/{duration}";
 
                 int timeOfPlayer = Player.NaturalDuration.TimeSpan.Minutes * 60 + Player.NaturalDuration.TimeSpan.Seconds;
                 Slider.Maximum = timeOfPlayer;
                 Slider.Value += 1;
             }
-            else
-                Title = "No file selected...";
+            //else
+            //    Title = "No file selected...";
         }
 
         int currentRandomPlay = 0;
@@ -183,8 +184,10 @@ namespace multimedia_player
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ListBoxFiles.ItemsSource = FullPaths;
+            dataFromFile.listOfPlayLists = new BindingList<PlaylistObject>();
+         
             string line;
+
             if(File.Exists(playListFile))
             {
                 using (StreamReader sr = new StreamReader(playListFile))
@@ -193,15 +196,14 @@ namespace multimedia_player
                 }
                 if (line != "")
                 {
-                    listOfPlaylists = JsonConvert.DeserializeObject<BindingList<PlaylistObject>>(line);
-                    Debug.WriteLine($"DMC DAY NE:{listOfPlaylists}");
-
+                    dataFromFile = JsonConvert.DeserializeObject<Data>(line);
                 }
 
             }
 
-            //var playList= listOfPlaylists.Playlist;
-            ListBoxPlaylist.ItemsSource = listOfPlaylists;
+            FullPaths = dataFromFile.lastTimePlaying;
+            ListBoxPlaylist.ItemsSource = dataFromFile.listOfPlayLists;
+            ListBoxFiles.ItemsSource = FullPaths;
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
@@ -462,18 +464,18 @@ namespace multimedia_player
                 name = "Playlist";
             }
 
-            listOfPlaylists.Add(new PlaylistObject()
+            dataFromFile.listOfPlayLists.Add(new PlaylistObject()
             {
                 PlaylistName = name,
                 Playlist = playList
             });
 
-            //ListBoxPlaylist.ItemsSource = listOfPlaylists;
+            ListBoxPlaylist.ItemsSource = dataFromFile.listOfPlayLists;
         }
 
         private void RemovePlaylist_Click(object sender, RoutedEventArgs e)
         {
-            listOfPlaylists.RemoveAt(ListBoxPlaylist.SelectedIndex);
+            dataFromFile.listOfPlayLists.RemoveAt(ListBoxPlaylist.SelectedIndex);
         }
 
         private void SaveToFile_Click(object sender, RoutedEventArgs e)
@@ -481,7 +483,7 @@ namespace multimedia_player
             using (StreamWriter sw = new StreamWriter(playListFile))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                string json = JsonConvert.SerializeObject(listOfPlaylists, Formatting.Indented);
+                string json = JsonConvert.SerializeObject(dataFromFile, Formatting.Indented);
                 sw.WriteLine(json);
             }
         }
@@ -490,7 +492,7 @@ namespace multimedia_player
         {
             if (ListBoxPlaylist.SelectedIndex >= 0)
             {
-                FullPaths = listOfPlaylists[ListBoxPlaylist.SelectedIndex].Playlist;
+                FullPaths = dataFromFile.listOfPlayLists[ListBoxPlaylist.SelectedIndex].Playlist;
                 ListBoxFiles.ItemsSource = FullPaths;
             }
             else
@@ -525,6 +527,15 @@ namespace multimedia_player
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            dataFromFile.lastTimePlaying = FullPaths;
+
+            using (StreamWriter sw = new StreamWriter(playListFile))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                string json = JsonConvert.SerializeObject(dataFromFile, Formatting.Indented);
+                sw.WriteLine(json);
+            }
+
             _hook.KeyUp -= KeyUp_hook;
             _hook.Dispose();
         }

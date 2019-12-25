@@ -28,7 +28,13 @@ namespace multimedia_player
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            name = NameTextBox.Text;
+            if (NameTextBox.Text == "")
+            {
+                name = "Playlist";
+            } else
+            {
+                name = NameTextBox.Text;
+            }
             this.DialogResult = true;
             this.Close();
         }

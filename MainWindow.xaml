@@ -67,11 +67,11 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Margin="10,0,0,0">
-                    <Label HorizontalContentAlignment="Center" Background="#757575" Foreground="White" Grid.Row="0">Playlist:</Label>
+                    <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" HorizontalContentAlignment="Center" Background="#757575" Foreground="White" Grid.Row="0">Playlist:</Label>
                     <ListBox Name="ListBoxPlaylist" Grid.Row="1" Width="Auto" Height="315">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding PlaylistName}"></TextBlock>
+                                <TextBlock FontSize="15" FontWeight="Bold" FontFamily="Corbel" Text="{Binding PlaylistName}"></TextBlock>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
@@ -79,9 +79,8 @@
 
                 <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" Canvas.Top="226">
-                        <Button Click="LoadPlaylist_Click" FontWeight="Bold" FontSize="11" Width="80" Height="25">Load Playlist</Button>
-                        <Button Click="SaveToFile_Click" FontSize="11" FontWeight="Bold" Width="80" Height="25">Save To File</Button>
-                        <Button Click="RemovePlaylist_Click" FontWeight="Bold" FontSize="11" Width="80" Height="25">Remove</Button>
+                        <Button Click="LoadPlaylist_Click" FontSize="13" FontWeight="Bold" FontFamily="Corbel" Width="100" Height="25">Load Playlist</Button>
+                        <Button Click="RemovePlaylist_Click" FontSize="13" FontWeight="Bold" FontFamily="Corbel" Width="100" Height="25">Remove Playlist</Button>
                     </StackPanel>
                 </StackPanel>
             </Grid>
@@ -98,7 +97,8 @@
                             <RotateTransform/>
                         </Image.RenderTransform>
                     </Image>
-
+                    <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" Content="Playing:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" Content="no song" Name="lbPlayer" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" Width="378"/>
                 </StackPanel>
             </Grid>
 
@@ -110,7 +110,7 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Margin="0,0,10,0">
-                    <Label HorizontalContentAlignment="Center" Background="#757575" Foreground="White" Grid.Row="0" >Songs:</Label>
+                    <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" HorizontalContentAlignment="Center" Background="#757575" Foreground="White" Grid.Row="0" >Songs:</Label>
                     <ListBox Name="ListBoxFiles" Grid.Row="1" Width="Auto" Height="315">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -121,7 +121,7 @@
                                         </CheckBox.Tag>
                                     </CheckBox>
                                     <Label></Label>
-                                    <TextBlock Text="{Binding Name, Converter={StaticResource converter}}"/>
+                                    <TextBlock FontSize="15" FontWeight="Bold" FontFamily="Corbel" Text="{Binding Name, Converter={StaticResource converter}}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -130,10 +130,10 @@
 
                 <StackPanel Grid.Row="1">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button Click="addFile_Click" FontWeight="Bold" FontSize="11" Width="80" Height="25">Load Song</Button>
+                        <Button Click="addFile_Click" FontSize="13" FontWeight="Bold" FontFamily="Corbel" Width="80" Height="25">Load Song</Button>
 
-                        <Button Click="SaveToPlaylist_Click" FontSize="11" FontWeight="Bold" Width="80" Height="25">Save To Playlist</Button>
-                        <Button FontWeight="Bold" FontSize="11" Width="80" Height="25" Click="btnRemove_Click">Remove</Button>
+                        <Button Click="SaveToPlaylist_Click" FontSize="13" FontWeight="Bold" FontFamily="Corbel" Width="100" Height="25">Save To Playlist</Button>
+                        <Button FontSize="13" FontWeight="Bold" FontFamily="Corbel" Width="80" Height="25" Click="btnRemove_Click">Remove</Button>
                     </StackPanel>
                 </StackPanel>
             </Grid>
@@ -147,14 +147,14 @@
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Canvas.Left="75" Canvas.Top="261" HorizontalAlignment="Center">
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Slider VerticalAlignment="Center" Grid.Column="0" Width="Auto" MinWidth="600" Name="Slider"  IsMoveToPointEnabled="True"   MouseUp="Slider_Click"/>
-                <Label  Name="currenttime" VerticalAlignment="Center" Grid.Column="1" Content="00:00/00:00"/>
+                <Slider VerticalAlignment="Center" Grid.Column="0" Width="Auto" MinWidth="600" Name="Slider" IsMoveToPointEnabled="True"  MouseUp="Slider_Click"/>
+                <Label FontSize="15" FontWeight="Bold" FontFamily="Corbel" Name="currenttime" VerticalAlignment="Center" Grid.Column="1" Content="00:00/00:00"/>
             </Grid>
 
             <!--Media control-->
@@ -189,10 +189,6 @@
                     <CheckBox Style="{StaticResource repeat1Checkbox}" Name="RepeatOne" Click="RepeatOne_Checked"/>
                 </StackPanel>
             </Grid>
-
         </Grid>
-        <Label Content="Player:" HorizontalAlignment="Left" Margin="468,10,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <Label Content="no player" Name="lbPlayer" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="312,36,0,0" Grid.Row="1" VerticalAlignment="Top" Width="378"/>
-
     </Grid>
 </Window>
