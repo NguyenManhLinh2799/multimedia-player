@@ -212,6 +212,11 @@ namespace multimedia_player
             {
                 FullPaths = dataFromFile.lastTimePlaying;
             }
+
+            if (dataFromFile.index != -1)
+            {
+                ListBoxFiles.SelectedIndex = dataFromFile.index;
+            }
             ListBoxPlaylist.ItemsSource = dataFromFile.listOfPlayLists;
             ListBoxFiles.ItemsSource = FullPaths;
         }
@@ -538,6 +543,7 @@ namespace multimedia_player
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             dataFromFile.lastTimePlaying = FullPaths;
+            dataFromFile.index = currentIndex;
 
             using (StreamWriter sw = new StreamWriter(playListFile))
             {

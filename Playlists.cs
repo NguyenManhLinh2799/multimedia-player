@@ -14,6 +14,8 @@ namespace multimedia_player
     {
         public BindingList<PlaylistObject> listOfPlayLists { get; set; }
         public BindingList<FileInfo> lastTimePlaying { get; set; }
+
+        public int index;
     }
     class PlaylistObject: IValueConverter
     {
