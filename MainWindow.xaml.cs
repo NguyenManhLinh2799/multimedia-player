@@ -208,7 +208,10 @@ namespace multimedia_player
 
             }
 
-            FullPaths = dataFromFile.lastTimePlaying;
+            if (dataFromFile.lastTimePlaying != null)
+            {
+                FullPaths = dataFromFile.lastTimePlaying;
+            }
             ListBoxPlaylist.ItemsSource = dataFromFile.listOfPlayLists;
             ListBoxFiles.ItemsSource = FullPaths;
         }
